@@ -6,21 +6,14 @@
 </head>
 
 <body>
-    <form action="" method="post" role="form">
-            {{ form.csrf }}
-    <div class="form-group">
-    <label for="seed">Name:</label>
     <input type="text" class="form-control" id="seed" name="seed" placeholder="Songs to Generate List">
     <br>
-    <label for="songs">Surame:</label>
     <input type="text" class="form-control" id="songs" name="songs" placeholder="Playlist of All Songs">
     <br>
-    </div>
 
     <center>
-    <button type="submit" class="btn btn-success">Submit</button>
+    <button type="submit" class="btn btn-success" onclick="submitClicked()">Submit</button>
     </center>
-    </form>
 
     <script type="text/javascript" src="{{url_for('static', filename='form.js')}}"></script>
 </body>

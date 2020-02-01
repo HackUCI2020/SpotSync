@@ -1,0 +1,22 @@
+/* function taken from
+    https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
+*/
+function encodeQueryData(data) {
+   const ret = [];
+   for (let d in data)
+     ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+   return ret.join('&');
+}
+
+function submitClicked()
+{
+    var seedValue = document.getElementById("seed").value;
+    var songsValue = document.getElementById("songs").value;
+    var params = {
+        seed: seedValue,
+        songs: songsValue
+    };
+    var url = window.location.href+"/song-request?"+encodeQueryData(params)
+    console.log(url)
+    window.open(url)
+}

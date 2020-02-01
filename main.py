@@ -12,20 +12,15 @@ class QueryForm(Form):
 
 
 @app.route('/')
-@app.route('/index')
-@app.route('/form', methods=["GET", "POST"])
 def redirect_from_seed():
-    form = QueryForm(request.form)
-    if request.method == 'POST':
-        seed = request.form['seed']
-        songs = request.form['songs']
-        return render_template('return-query.html', content=PlaylistParser.parse(seed, songs))
-    else:
-        return render_template('form.html', form=form)
+    return render_template('form.html')
 
 
-def results_from_seed(songs):
-    return render_template('return-query.html', content=songs)
+@app.route('/song-request')
+def process_request():
+    seed = request.args.get('seed')
+    songs = request.args.get('songs')
+    return render_template('return-query.html', content=PlaylistParser.parse(seed, songs))
 
 
 if __name__ == "__main__":
