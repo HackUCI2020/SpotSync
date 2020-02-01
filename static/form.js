@@ -8,6 +8,10 @@ function encodeQueryData(data) {
    return ret.join('&');
 }
 
+function redirect(url) {
+    window.location.href = url;
+}
+
 function submitClicked()
 {
     var seedValue = document.getElementById("seed").value;
@@ -16,7 +20,7 @@ function submitClicked()
         seed: seedValue,
         songs: songsValue
     };
-    var url = window.location.href+"/song-request?"+encodeQueryData(params)
+    var url = "/song-request?"+encodeQueryData(params)
     console.log(url)
-    window.open(url)
+    redirect(url)
 }

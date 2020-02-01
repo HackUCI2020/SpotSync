@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>SpotSync - Songs</title>
-</head>
+{% extends "layout.html" %}
 
-<body>
-Your songs:
+{% block content %}
+
+<p>Your songs:</p>
 {% for song in content %}
-<div><p>song</p></div>
+<div><p>{{song}}</p></div>
 {% endfor %}
-</body>
-</html>
+
+
+{% endblock %}

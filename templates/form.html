@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>SpotSync - Form</title>
-</head>
+{% extends "layout.html" %}
 
-<body>
-    <input type="text" class="form-control" id="seed" name="seed" placeholder="Songs to Generate List">
+{% block content %}
+    <center>
+    <p>Songs Used as Seed: </p><input type="text" class="form-control" id="seed" name="seed" placeholder="Songs to Generate List">
     <br>
-    <input type="text" class="form-control" id="songs" name="songs" placeholder="Playlist of All Songs">
+    <p>Songs Used as Source: </p><input type="text" class="form-control" id="songs" name="songs" placeholder="Playlist of All Songs">
     <br>
+    </center>
 
     <center>
     <button type="submit" class="btn btn-success" onclick="submitClicked()">Submit</button>
     </center>
 
     <script type="text/javascript" src="{{url_for('static', filename='form.js')}}"></script>
-</body>
-</html>
+{% endblock %}
