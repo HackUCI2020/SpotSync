@@ -8,15 +8,6 @@ from json.decoder import JSONDecodeError
 import spotipy
 import spotipy.util as util
 
-# deprecated
-""""
-def show_tracks(tracks):
-    for i, item in enumerate(tracks['items']):
-        track = item['track']
-        print("   %d %32.32s %s" % (i, track['artists'][0]['name'],
-            track['name']))
-"""
-
 
 credentials = {
     "username": '21jarfouci4vnbo6z2ytnr6qa',
@@ -24,6 +15,7 @@ credentials = {
     "client_id": '72bbb6fde66d465e9a5641fc7bf5dd9e',
     "client_secret": '26a648a8552e4dbd85af35e20a815d20'
 }
+
 
 def get_token(credentials=credentials):
     return util.prompt_for_user_token(credentials["username"],
@@ -40,11 +32,24 @@ def safe_capture_token(credentials=credentials):
         os.remove(f".cache-{credentials['username']}")
         print("failed to retrieve token")
 
-
+"""
 def get_playlists(SpotifyObject):
     playlists = SpotifyObject.current_user_playlists(limit=3, offset=0)
     return playlists['items']
 
+def download_playlists(file_path=''):
+    token = safe_capture_token()
+    if not token:
+        print("Can't get token for", credentials['username'])
+    else:
+        SpotifyObject = spotipy.Spotify(auth=token)
+        for playlist in get_playlists(SpotifyObject):
+            if playlist['owner']['id'] == credentials['username']:
+                file_name = playlist['name'] + ".txt"
+                print (f'{file_name}: \ttotal tracks {playlist["tracks"]["total"]}')
+                results = SpotifyObject.playlist(playlist['id'], fields="tracks,next")
+                write_all_tracks(SpotifyObject, results['tracks'], file_name, file_path)
+"""
 
 def write_all_tracks(SpotifyObject, tracks, file_name, dir_path=''):
     file_name = dir_path + file_name
@@ -66,24 +71,24 @@ def write_tracks(tracks, file):
                 pass
 
 
-def download_playlists(file_path=''):
+def download_playlists_from_ids(ids: [str]):
     token = safe_capture_token()
     if not token:
         print("Can't get token for", credentials['username'])
     else:
         SpotifyObject = spotipy.Spotify(auth=token)
-        for playlist in get_playlists(SpotifyObject):
-            if playlist['owner']['id'] == credentials['username']:
-                file_name = playlist['name'] + ".txt"
-                print (f'{file_name}: \ttotal tracks {playlist["tracks"]["total"]}')
-                results = SpotifyObject.playlist(playlist['id'], fields="tracks,next")
-                write_all_tracks(SpotifyObject, results['tracks'], file_name, file_path)
+        for id in ids:
+            write_playlist_from_id(SpotifyObject, id)
 
-def write_playlist_from_link(SpotifyObject, link: str):
+
+def write_playlist_from_id(SpotifyObject, id: str, file_name=""):
+    write_playlist_from_link(SpotifyObject, f"https://open.spotify.com/playlist/{id}", file_name=id+".txt")
+
+
+def write_playlist_from_link(SpotifyObject, link: str, file_name=""):
     playlist = download_playlist_from_link(SpotifyObject, link)
-    print(playlist)
-    print(playlist.keys())
-    file_name = "RapCaviar" + ".txt"
+    if file_name == "":
+        file_name = link+".txt"
     print (f'{file_name}: \ttotal tracks {playlist["tracks"]["total"]}')
     write_all_tracks(SpotifyObject, playlist['tracks'], file_name,
                      "../PlaylistParser/playlists/")
@@ -93,13 +98,6 @@ def download_playlist_from_link(SpotifyObject, link: str):
     playlist = SpotifyObject.playlist(link, fields="tracks,next")
     return playlist
 
+
 if __name__ == "__main__":
-    #download_playlists("../PlaylistParser/playlists/")
-    
-    token = safe_capture_token()
-    if not token:
-        print("Can't get token for", credentials['username'])
-    else:
-        SpotifyObject = spotipy.Spotify(auth=token)
-    write_playlist_from_link(SpotifyObject, "https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd?si=6FB77Wu3TZaEO-qImDVjpQ")
-    
+    download_playlists_from_ids(["02LSRubmHAdPMVk6OcIKZ6", "37i9dQZF1DX0XUsuxWHRQd"])

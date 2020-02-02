@@ -19,7 +19,17 @@ def process_request():
     return render_template('return-query.html', content=content)
 
 
+@app.route('/playlist')
+def add_playlist():
+    return render_template('form-add.html')
+
+
+@app.route('/add-playlist')
+def process_addition():
+    ids = request.args.get('ids')
+    PlaylistDownloader.download_playlists_from_ids([id.strip() for id in ids.split(',')])
+
+
 if __name__ == "__main__":
-    PlaylistDownloader.download_playlists('PlaylistParser/playlists')
     PlaylistParser.Database.update_databases('PlaylistParser/')
     app.run(debug=False)

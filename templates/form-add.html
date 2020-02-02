@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <center>
+    <p>Playlist ids: </p><input type="text" class="form-control" id="ids" name="ids" placeholder="Playlist ids">
+    <br>
+
+    <center>
+    <button type="submit" class="btn btn-success" onclick="submitClicked()">Submit</button>
+    </center>
+
+    <script type="text/javascript" src="{{url_for('static', filename='form-add.js')}}"></script>
+{% endblock %}
