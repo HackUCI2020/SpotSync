@@ -1,14 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
-from wtforms import Form, TextField, validators
-
+from flask import Flask, render_template, request
 import PlaylistParser.PlaylistParser as PlaylistParser
 
 app = Flask(__name__)
-
-
-class QueryForm(Form):
-    seed = TextField('Seed:', validators=[validators.required()])
-    songs = TextField('Songs:', validators=[validators.required()])
 
 
 @app.route('/')
@@ -20,7 +13,9 @@ def redirect_from_seed():
 def process_request():
     seed = request.args.get('seed')
     songs = request.args.get('songs')
-    return render_template('return-query.html', content=PlaylistParser.parse(seed, songs, 5))
+    num_songs = request.args.get('numSongs')
+    content = PlaylistParser.parse(seed, songs, int(num_songs))
+    return render_template('return-query.html', content=content)
 
 
 if __name__ == "__main__":

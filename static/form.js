@@ -1,6 +1,5 @@
 /* function taken from
-    https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
-*/
+    https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript */
 function encodeQueryData(data) {
    const ret = [];
    for (let d in data)
@@ -16,9 +15,11 @@ function submitClicked()
 {
     var seedValue = document.getElementById("seed").value;
     var songsValue = document.getElementById("songs").value;
+    var numSongsValue = document.getElementById("num").value;
     var params = {
         seed: seedValue,
-        songs: songsValue
+        songs: songsValue,
+        numSongs: numSongsValue
     };
     var url = "/song-request?"+encodeQueryData(params)
     console.log(url)

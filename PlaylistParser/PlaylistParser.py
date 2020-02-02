@@ -4,15 +4,15 @@ import pathlib
 
 def parse(seed, songs, num_songs):
     db = Database()
-    seed = seed.split(',')
-    songs = songs.split(',')
-    print(seed)
-    print(songs)
-    print(num_songs)
-    return db.get_matching_songs(songs, seed, num_songs)
+    seed = [s.strip() for s in seed.split(',')]
+    if songs == "":
+        songs = list(db.get_all_songs())
+    else:
+        songs = [s.strip() for s in songs.split(',')]
+    return db.get_matching_songs(seed, songs, num_songs)
 
 
-def get_untracked_files(directory: pathlib.Path, db: {str:{str}}):
+def get_untracked_files(directory: pathlib.Path, db: {str: {str}}):
     for file_path in pathlib.Path(directory).iterdir():
         if file_path.name not in db.keys():
             yield file_path
@@ -25,7 +25,6 @@ class Database:
     def __init__(self, relative_path=""):
         self._db: {str:{str}} = {}
         self.load(relative_path)
-        print(self._db)
 
     @staticmethod
     def update_databases(relative_path=""):
@@ -45,7 +44,7 @@ class Database:
             pickle.dump(self._db, pickledDB)
 
     def parse_files(self, relative_path=""):
-        for file in get_untracked_files(pathlib.PurePath(relative_path+Database.PLAYLIST_TEXTS_DIRECTORY), self._db):
+        for file in get_untracked_files(pathlib.Path(pathlib.PurePath(relative_path+Database.PLAYLIST_TEXTS_DIRECTORY)), self._db):
             self._db[file.name] = set()
             with open(str(file), 'r') as playlist:
                 for line in playlist:
@@ -53,14 +52,18 @@ class Database:
         self.save()
 
     def get_all_songs(self):
-        return set.union(*[songs for songs in self._db.values()])
+        s = set()
+        for songs in self._db.values():
+            s = s.union(songs)
+        return s
 
     def get_matching_songs(self, seeds, song_list, num_songs):
         song_dict = dict()
         for song in song_list:
             song_dict[song] = self.get_compatibility(song, seeds)
         songs = sorted(song_dict.items(), key=lambda x: x[1], reverse=True)
-        return [song_score_match[0] for song_score_match in songs[0:num_songs]]
+        print(songs)
+        return [song_score_match[0] for song_score_match in songs[0:num_songs+1]]
 
     # returns how often the song occurs with seeds
     def get_compatibility(self, song, seeds) -> float:
@@ -69,23 +72,22 @@ class Database:
 
     def get_compatibility_with_seed(self, song, seed) -> float:
         compatibilities = [int(song in songs and seed in songs) for playlist, songs in self._db.items()]
-        weight = sum(compatibilities)/len(compatibilities)
         return sum(compatibilities)/len(compatibilities)
 
     def detect_compatibility(self, seeds: [str]):
-        def match_playlist(seeds: [str], songs: {str}):
+        def match_playlist(sds: [str], songs: {str}):
             count = 0
-            for seed in seeds:
+            for seed in sds:
                 if seed in songs:
                     count += 1
-            return count / len(seeds)
+            return count / len(sds)
         compatibility = [match_playlist(seeds, songs) for playlist, songs in self._db.items()]
         return sum(compatibility)/len(compatibility)
 
 
 if __name__ == "__main__":
+    # this main is used to refresh the database
     db = Database()
+    db.clear()
     db.parse_files()
-    print( db.get_matching_songs(db.get_all_songs(),
-                          10,
-                          ['song 1', 'song 2']))
+    print(db.get_matching_songs(db.get_all_songs(), 10, ['song 1', 'song 2']))
