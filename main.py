@@ -15,7 +15,7 @@ def process_request():
     seed = request.args.get('seed')
     songs = request.args.get('songs')
     num_songs = request.args.get('numSongs')
-    content = PlaylistParser.parse(seed, songs, int(num_songs))
+    content = PlaylistParser.parse(seed, songs, int(num_songs), 'PlaylistParser/')
     return render_template('return-query.html', content=content)
 
 

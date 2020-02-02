@@ -2,8 +2,8 @@ import pickle
 import pathlib
 
 
-def parse(seed, songs, num_songs):
-    db = Database()
+def parse(seed, songs, num_songs, relative_path=""):
+    db = Database(relative_path)
     seed = [s.strip() for s in seed.split(',')]
     if songs == "":
         songs = list(db.get_all_songs())
@@ -49,7 +49,7 @@ class Database:
             with open(str(file), 'r') as playlist:
                 for line in playlist:
                     self._db[file.name].add(line.strip())
-        self.save()
+        self.save(relative_path)
 
     def get_all_songs(self):
         s = set()
