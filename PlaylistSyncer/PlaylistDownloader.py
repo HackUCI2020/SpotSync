@@ -79,6 +79,27 @@ def download_playlists(file_path=''):
                 results = SpotifyObject.playlist(playlist['id'], fields="tracks,next")
                 write_all_tracks(SpotifyObject, results['tracks'], file_name, file_path)
 
+def write_playlist_from_link(SpotifyObject, link: str):
+    playlist = download_playlist_from_link(SpotifyObject, link)
+    print(playlist)
+    print(playlist.keys())
+    file_name = "RapCaviar" + ".txt"
+    print (f'{file_name}: \ttotal tracks {playlist["tracks"]["total"]}')
+    write_all_tracks(SpotifyObject, playlist['tracks'], file_name,
+                     "../PlaylistParser/playlists/")
+
+
+def download_playlist_from_link(SpotifyObject, link: str):
+    playlist = SpotifyObject.playlist(link, fields="tracks,next")
+    return playlist
 
 if __name__ == "__main__":
-    download_playlists("../PlaylistParser/playlists/")
+    #download_playlists("../PlaylistParser/playlists/")
+    
+    token = safe_capture_token()
+    if not token:
+        print("Can't get token for", credentials['username'])
+    else:
+        SpotifyObject = spotipy.Spotify(auth=token)
+    write_playlist_from_link(SpotifyObject, "https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd?si=6FB77Wu3TZaEO-qImDVjpQ")
+    
