@@ -25,3 +25,8 @@ function submitClicked()
     console.log(url)
     redirect(url)
 }
+
+function addClicked()
+{
+    redirect("/playlist")
+}
