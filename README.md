@@ -1,6 +1,7 @@
 # SpotSync
 
 SpotSync is a web app hosted on a Flask server
+https://devpost.com/software/spotsync
 
 ## Installation
 
