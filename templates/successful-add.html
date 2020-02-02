@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <center>
+    <p>Playlists Added to Database Successfully!</p>
+    <br>
+
+    <center>
+    <button type="submit" class="btn btn-success" onclick="done()">Return to Home</button>
+    </center>
+
+    <script type="text/javascript" src="{{url_for('static', filename='successful-add.js')}}"></script>
+{% endblock %}

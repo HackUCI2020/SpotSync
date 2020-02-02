@@ -71,27 +71,31 @@ def write_tracks(tracks, file):
                 pass
 
 
-def download_playlists_from_ids(ids: [str]):
+def download_playlists_from_ids(ids: [str], relative_path=""):
     token = safe_capture_token()
     if not token:
         print("Can't get token for", credentials['username'])
     else:
         SpotifyObject = spotipy.Spotify(auth=token)
         for id in ids:
-            write_playlist_from_id(SpotifyObject, id)
+            print(id, relative_path)
+            write_playlist_from_id(SpotifyObject, id, relative_path=relative_path)
 
 
-def write_playlist_from_id(SpotifyObject, id: str, file_name=""):
-    write_playlist_from_link(SpotifyObject, f"https://open.spotify.com/playlist/{id}", file_name=id+".txt")
+def write_playlist_from_id(SpotifyObject, id: str, file_name="", relative_path=""):
+    if file_name=="":
+        file_name = id + ".txt"
+    write_playlist_from_link(SpotifyObject, f"https://open.spotify.com/playlist/{id}", file_name, relative_path=relative_path)
 
 
-def write_playlist_from_link(SpotifyObject, link: str, file_name=""):
+def write_playlist_from_link(SpotifyObject, link: str, file_name="", relative_path=""):
     playlist = download_playlist_from_link(SpotifyObject, link)
     if file_name == "":
         file_name = link+".txt"
-    print (f'{file_name}: \ttotal tracks {playlist["tracks"]["total"]}')
+    print(f'{file_name}: \ttotal tracks {playlist["tracks"]["total"]}')
+    print(relative_path+"../PlaylistParser/playlists/")
     write_all_tracks(SpotifyObject, playlist['tracks'], file_name,
-                     "../PlaylistParser/playlists/")
+                     relative_path+"../PlaylistParser/playlists/")
 
 
 def download_playlist_from_link(SpotifyObject, link: str):

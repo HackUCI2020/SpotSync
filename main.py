@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import PlaylistParser.PlaylistParser as PlaylistParser
 import PlaylistSyncer.PlaylistDownloader as PlaylistDownloader
 
@@ -27,7 +27,8 @@ def add_playlist():
 @app.route('/add-playlist')
 def process_addition():
     ids = request.args.get('ids')
-    PlaylistDownloader.download_playlists_from_ids([id.strip() for id in ids.split(',')])
+    PlaylistDownloader.download_playlists_from_ids([id.strip() for id in ids.split(',')], relative_path="PlaylistSyncer/")
+    return render_template('successful-add.html')
 
 
 if __name__ == "__main__":
