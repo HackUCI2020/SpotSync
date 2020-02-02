@@ -90,4 +90,3 @@ if __name__ == "__main__":
     db = Database()
     db.clear()
     db.parse_files()
-    print(db.get_matching_songs(db.get_all_songs(), 10, ['song 1', 'song 2']))

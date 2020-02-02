@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import PlaylistParser.PlaylistParser as PlaylistParser
+import PlaylistSyncer.PlaylistDownloader as PlaylistDownloader
 
 app = Flask(__name__)
 
@@ -19,5 +20,6 @@ def process_request():
 
 
 if __name__ == "__main__":
+    PlaylistDownloader.download_playlists('PlaylistParser/playlists')
     PlaylistParser.Database.update_databases('PlaylistParser/')
     app.run(debug=False)
