@@ -37,33 +37,36 @@ anne_user = "anne.wang12"
 anne_client_id = "a68602be8c9642b9afc83086371e1a05"
 anne_client_secret = "fa5e0ae6c5834c68b820e183651a560f"
 
-
+#os.remove(f".cache-{username}")
 #get authorizaation token
 try:
     token = util.prompt_for_user_token(username,scope,client_id= client_id, \
                                        client_secret= client_secret, \
                                        redirect_uri='https://google.com/')
     
-    print(json.dumps(token, sort_keys=True, indent=4))
 except:
-    #os.remove(f".cache-{username}")
+    os.remove(f".cache-{username}")
     print("uh oh")
 
+print(token)
 if token:
     SpotifyObject = spotipy.Spotify(auth=token)
     
     
-    playlists = SpotifyObject.current_user_playlists(limit=1, offset=0)
-
+    playlists = SpotifyObject.current_user_playlists(limit=3, offset=0)
+    
+    print("hi")
     for playlist in playlists['items']:
+            print(playlist['owner']['id'])
             if playlist['owner']['id'] == username:
                 print()
-                print(playlist['name'])
+                playlist_name = playlist['name']
+                file_name = playlist_name + ".txt"
                 print ('  total tracks', playlist['tracks']['total'])
                 results = SpotifyObject.playlist(playlist['id'],
                     fields="tracks,next")
 
-                with open("Songs.txt", "w") as file:
+                with open(file_name, "w") as file:
                     tracks = results['tracks']
                     #prints first 100 tracks of playlist
                     printAndWriteTracks(tracks, file)
