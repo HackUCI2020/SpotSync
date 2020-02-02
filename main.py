@@ -20,8 +20,9 @@ def redirect_from_seed():
 def process_request():
     seed = request.args.get('seed')
     songs = request.args.get('songs')
-    return render_template('return-query.html', content=PlaylistParser.parse(seed, songs))
+    return render_template('return-query.html', content=PlaylistParser.parse(seed, songs, 5))
 
 
 if __name__ == "__main__":
+    PlaylistParser.Database.update_databases('PlaylistParser/')
     app.run(debug=False)
